@@ -81,6 +81,12 @@ jobs:
       - name: Verify website
         run: |
           curl -f http://${{ secrets.EC2_HOST }}
+      - name: Run database migrations
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/.ssh/github-actions-deploy \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "cd ~/django-blog && source venv/bin/activate && python manage.py migrate --noinput"
      
      
       
