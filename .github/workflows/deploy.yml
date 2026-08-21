@@ -47,28 +47,25 @@ jobs:
             -i ~/.ssh/github-actions-deploy \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "cd ~/django-blog && source venv/bin/activate && pip install -r requirements.txt"
+      
+      - name: Check Django settings
+        run: >
+          ssh -o StrictHostKeyChecking=no
+          -i ~/.ssh/github-actions-deploy
+          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}
+          "cd ~/django-blog && source venv/bin/activate && python manage.py shell -c 'from django.conf import settings; print(settings.STATIC_ROOT)'"
+      - name: Collect static files
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/.ssh/github-actions-deploy \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "cd ~/django-blog && source venv/bin/activate && python manage.py collectstatic --noinput"
       - name: Restart Gunicorn
         run: |
           ssh -o StrictHostKeyChecking=no \
             -i ~/.ssh/github-actions-deploy \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "sudo systemctl restart gunicorn"
-                  - name: Check Django settings
-       run: >
-          ssh -o StrictHostKeyChecking=no
-          -i ~/.ssh/github-actions-deploy
-          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}
-          "cd ~/django-blog && source venv/bin/activate && python manage.py shell -c 'from django.conf import settings; print(settings.STATIC_ROOT)'"
-
-      - name: Collect static files
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-            -i ~/.ssh/github-actions-deploy \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "cd ~/django-blog && source venv/bin/activate && python manage.py collectstatic --noinput"
-      - name: Collect static files
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-            -i ~/.ssh/github-actions-deploy \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "cd ~/django-blog && source venv/bin/activate && python manage.py collectstatic --noinput"
+     
+     
+      
