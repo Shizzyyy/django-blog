@@ -41,3 +41,9 @@ jobs:
             -i ~/.ssh/github-actions-deploy \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "cd ~/django-blog && git pull origin main"
+      - name: Update dependencies on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/.ssh/github-actions-deploy \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "cd ~/django-blog && source venv/bin/activate && pip install -r requirements.txt"
