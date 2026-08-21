@@ -35,3 +35,9 @@ jobs:
             -i ~/.ssh/github-actions-deploy \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "echo 'SSH connection successful'"
+      - name: Pull latest code on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/.ssh/github-actions-deploy \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "cd ~/django-blog && git pull origin main"
